@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: "Compount Interest Calculator",
+    title: "Compound Interest Calculator",
   },
   plugins: [
     "gatsby-plugin-styled-components",
