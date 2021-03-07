@@ -33,7 +33,6 @@ const GlobalStyles = createGlobalStyle`
   body {
     min-height: 100vh;
     margin: 2rem 2rem 0;
-    overflow: hidden;
   	font-size: 2rem;
   }
 `;

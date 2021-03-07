@@ -21,6 +21,8 @@ const FormInput = styled.input`
   border: none;
   padding: 0.3rem;
   box-shadow: 2px 2px 2px;
+  max-width: 100px;
+  margin: 0 0.5rem;
 `;
 
 const FormSelect = styled.select`
@@ -28,18 +30,69 @@ const FormSelect = styled.select`
   border: none;
   padding: 0.3rem;
   box-shadow: 2px 2px 2px;
+  margin: 0 0.5rem;
 `;
 
 const InvestmentForm = () => {
   const [formState, useFormState] = useState({
     initialInvestment: 0,
     contributionAmount: 0,
-    contributionIntervalNumber: 1,
-    contributionIntervalSelect: "months",
+    contributionLengthInYears: 1,
+    interestRate: 0,
+    compoundFrequency: "daily",
+    moneyEachYear: [],
   });
 
   const handleChange = (e) => {
     useFormState({ ...formState, [e.target.name]: e.target.value });
+  };
+
+  const calculateInterest = () => {
+    const {
+      initialInvestment,
+      contributionAmount,
+      contributionLengthInYears,
+      interestRate,
+      compoundFrequency,
+    } = formState;
+
+    // How many times is the interest compounded in a year
+    let compoundTimesPerYear;
+    switch (compoundFrequency) {
+      case "daily":
+        compoundTimesPerYear = 365;
+        break;
+      case "monthly":
+        compoundTimesPerYear = 12;
+        break;
+      case "semiAnnually":
+        compoundTimesPerYear = 2;
+        break;
+      case "annually":
+        compoundTimesPerYear = 1;
+        break;
+    }
+    const interestRateDecimal = interestRate / 100;
+
+    const moneyEachYear = [initialInvestment];
+    for (let i = 0; i < contributionLengthInYears; i++) {
+      const interestOnInitialCapital =
+        moneyEachYear[i] *
+        (1 + interestRateDecimal / compoundTimesPerYear) **
+          compoundTimesPerYear;
+
+      const interestOnContributions =
+        contributionAmount *
+        (((1 + interestRateDecimal / compoundTimesPerYear) **
+          compoundTimesPerYear -
+          1) /
+          (interestRateDecimal / compoundTimesPerYear));
+      moneyEachYear.push(
+        (interestOnInitialCapital + interestOnContributions).toFixed(2)
+      );
+    }
+    useFormState({ ...formState, moneyEachYear });
+    return moneyEachYear;
   };
 
   return (
@@ -55,24 +108,79 @@ const InvestmentForm = () => {
             min="0"
             value={formState.initialInvestment}
             step="any"
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => {
+              if (e.target.value < 0) return;
+              handleChange(e);
+            }}
           />
         </InputLabel>
       </fieldset>
       <StepTitle>Step 2: Contribute</StepTitle>
       <fieldset>
         <span>
-          I plan to contribute/withdraw
-          <FormInput type="number" value="0" step="any" />
-          every
-          <FormInput type="number" min="1" value="1" />
-          <FormSelect id="contributionFrequency" name="contributionFrequency">
-            <option value="weeks">Weeks</option>
-            <option value="months">Months</option>
-            <option value="years">Years</option>
-          </FormSelect>
+          <InputLabel htmlFor="contributionAmount">
+            Monthly contribution
+            <FormInput
+              type="number"
+              id="contributionAmount"
+              name="contributionAmount"
+              value={formState.contributionAmount}
+              onChange={(e) => handleChange(e)}
+              step="any"
+            />
+          </InputLabel>
+          <InputLabel htmlFor="contributionLengthInYears">
+            Length of time in years
+            <FormInput
+              type="number"
+              min="1"
+              id="contributionLengthInYears"
+              name="contributionLengthInYears"
+              value={formState.contributionLengthInYears}
+              onChange={(e) => {
+                const value = parseInt(e.target.value, 10);
+                if (!Number.isInteger(value) || value < 1) return;
+                handleChange(e);
+              }}
+            />
+          </InputLabel>
         </span>
       </fieldset>
+      <StepTitle>Step 3: Interest</StepTitle>
+      <fieldset>
+        <InputLabel htmlFor="interestRate">
+          Interest Rate
+          <FormInput
+            type="number"
+            id="interestRate"
+            name="interestRate"
+            min="0"
+            value={formState.interestRate}
+            step="any"
+            onChange={(e) => {
+              if (e.target.value < 0) return;
+              handleChange(e);
+            }}
+          />
+        </InputLabel>
+        <InputLabel htmlFor="compoundFrequency">
+          Compound Frequency
+          <FormSelect
+            id="compoundFrequency"
+            name="compoundFrequency"
+            value={formState.compoundFrequency}
+            onChange={(e) => handleChange(e)}
+          >
+            <option value="daily">Daily</option>
+            <option value="monthly">Monthly</option>
+            <option value="samiAnnually">Semi Annually</option>
+            <option value="annually">Annually</option>
+          </FormSelect>
+        </InputLabel>
+      </fieldset>
+      <button type="button" onClick={() => calculateInterest()}>
+        Calculate
+      </button>
     </InterestForm>
   );
 };
