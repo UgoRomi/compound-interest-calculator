@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components"
 
 const GlobalStyles = createGlobalStyle`
   :root {
@@ -24,7 +24,7 @@ const GlobalStyles = createGlobalStyle`
     font-weight: normal;
     margin: 0;
   }
-  
+
   h1 {
 	  font-size: 3rem;
 	  font-weight: bold;
@@ -35,6 +35,6 @@ const GlobalStyles = createGlobalStyle`
     margin: 2rem 2rem 0;
   	font-size: 2rem;
   }
-`;
+`
 
-export default GlobalStyles;
+export default GlobalStyles

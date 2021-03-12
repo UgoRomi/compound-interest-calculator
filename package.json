@@ -19,7 +19,7 @@
       "ugoromi/react"
     ]
   },
-  "prettier": "prettier-config-ugoromi",
+  "prettier": "@ugoromi/prettier-config",
   "dependencies": {
     "@fontsource/fira-sans": "^4.2.1",
     "babel-plugin-styled-components": "^1.12.0",
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
+    "@ugoromi/prettier-config": "^1.0.0",
     "eslint": "^7.21.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.2.0",
