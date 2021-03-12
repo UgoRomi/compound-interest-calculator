@@ -9,6 +9,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import styled from "styled-components";
+
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 300px;
+  font-size: 0.7em;
+`;
 
 const InvestmentGraph = ({ dataPerYear }) => {
   const chartData = dataPerYear.map((data, i) => ({
@@ -16,8 +23,10 @@ const InvestmentGraph = ({ dataPerYear }) => {
     year: new Date().getFullYear() + i,
   }));
 
+  const formatMoneyAxis = (value) => `${value}$`;
+
   return (
-    <div style={{ width: "100%", height: 300 }}>
+    <ChartContainer>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={chartData}
@@ -31,18 +40,18 @@ const InvestmentGraph = ({ dataPerYear }) => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
+          <XAxis dataKey="year" />
+          <YAxis tickFormatter={formatMoneyAxis} />
           <Tooltip />
           <Area
-            stroke="#8884d8"
-            fill="#8884d8"
+            stroke="var(--yellow)"
+            fill="var(--yellow)"
             type="monotone"
             dataKey="money"
           />
         </AreaChart>
       </ResponsiveContainer>
-    </div>
+    </ChartContainer>
   );
 };
 

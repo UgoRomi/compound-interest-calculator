@@ -71,6 +71,8 @@ const InvestmentForm = () => {
       case "annually":
         compoundTimesPerYear = 1;
         break;
+      default:
+        console.error("hello");
     }
     const interestRateDecimal = interestRate / 100;
 
@@ -173,7 +175,7 @@ const InvestmentForm = () => {
           >
             <option value="daily">Daily</option>
             <option value="monthly">Monthly</option>
-            <option value="samiAnnually">Semi Annually</option>
+            <option value="semiAnnually">Semi Annually</option>
             <option value="annually">Annually</option>
           </FormSelect>
         </InputLabel>
