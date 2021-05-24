@@ -17,6 +17,22 @@ const ChartContainer = styled.div`
 	font-size: 0.7em;
 `
 
+const CustomTooltipContainer = styled.div`
+	background: var(--white);
+	color: var(--black);
+`
+
+const CustomTooltip = ({ active, payload }) => {
+	if (active && payload && payload.length) {
+		return (
+			<CustomTooltipContainer>
+				<p>{payload[0].value} €</p>
+			</CustomTooltipContainer>
+		)
+	}
+	return null
+}
+
 const InvestmentGraph = ({ dataPerYear }) => {
 	const chartData = dataPerYear.map((data, i) => ({
 		money: data,
@@ -42,7 +58,7 @@ const InvestmentGraph = ({ dataPerYear }) => {
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis dataKey="year" />
 					<YAxis tickFormatter={formatMoneyAxis} />
-					<Tooltip />
+					<Tooltip content={<CustomTooltip />} />
 					<Area
 						stroke="var(--yellow)"
 						fill="var(--yellow)"
@@ -57,6 +73,16 @@ const InvestmentGraph = ({ dataPerYear }) => {
 
 InvestmentGraph.propTypes = {
 	dataPerYear: PropTypes.arrayOf(PropTypes.number).isRequired,
+}
+
+CustomTooltip.propTypes = {
+	active: PropTypes.bool,
+	payload: PropTypes.arrayOf(PropTypes.object),
+}
+
+CustomTooltip.defaultProps = {
+	active: false,
+	payload: [],
 }
 
 export default InvestmentGraph

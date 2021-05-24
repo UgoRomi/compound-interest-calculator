@@ -72,11 +72,11 @@ const InvestmentForm = () => {
 				compoundTimesPerYear = 1
 				break
 			default:
-				console.error("hello")
+				throw new Error(`Unhandled compound frequency ${compoundFrequency}`)
 		}
 		const interestRateDecimal = interestRate / 100
 
-		const moneyEachYear = [initialInvestment]
+		const moneyEachYear = [parseInt(initialInvestment, 10)]
 		for (let i = 0; i < contributionLengthInYears; i++) {
 			const interestOnInitialCapital =
 				moneyEachYear[i] *
@@ -87,9 +87,10 @@ const InvestmentForm = () => {
 				(((1 + interestRateDecimal / compoundTimesPerYear) **
 					compoundTimesPerYear -
 					1) /
-					(interestRateDecimal / compoundTimesPerYear))
+					(interestRateDecimal / compoundTimesPerYear || 1))
 			moneyEachYear.push(
-				(interestOnInitialCapital + interestOnContributions).toFixed(2)
+				Math.round((interestOnInitialCapital + interestOnContributions) * 1e2) /
+					1e2
 			)
 		}
 		useFormState({ ...formState, moneyEachYear })
